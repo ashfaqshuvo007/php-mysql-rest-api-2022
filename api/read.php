@@ -38,7 +38,7 @@
                 "rate" => $rate,
                 "charge" => $charge,
                 "area" => $area,
-                "department_ids" => $department_ids                                                                                              ,
+                "department_ids" => $department_ids,
 
             );
             array_push($shiftArr["body"], $e);

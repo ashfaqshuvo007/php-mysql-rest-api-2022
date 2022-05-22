@@ -38,7 +38,7 @@
             $stmt->bindParam(":created", $this->created);
         
             if($stmt->execute()){
-               return true;
+               return $this->conn->lastInsertId();
             }
             return false;
         }
@@ -60,32 +60,29 @@
             
             $this->name = $dataRow['name'];
             $this->created = $dataRow['created'];
-        }        
-        // UPDATE
-        public function updateArea(){
-            $sqlQuery = "UPDATE
+        }    
+        
+        //Getsingle by name
+        // READ single
+        public function getSingleAreaByName($name){
+           
+            $sqlQuery = "SELECT
+                        id, 
+                        name,
+                        created
+                      FROM
                         ". $this->db_table ."
-                    SET
-                        name = :name, 
-                        created = :created
                     WHERE 
-                        id = :id";
-        
+                       name = ?
+                    LIMIT 0,1";
             $stmt = $this->conn->prepare($sqlQuery);
-        
-            $this->name=htmlspecialchars(strip_tags($this->name));
-            $this->created=htmlspecialchars(strip_tags($this->created));
-            $this->id=htmlspecialchars(strip_tags($this->id));
-        
-            // bind data
-            $stmt->bindParam(":name", $this->name);
-            $stmt->bindParam(":id", $this->id);
-        
-            if($stmt->execute()){
-               return true;
-            }
-            return false;
-        }
+            $stmt->bindParam(1, $this->name);
+            $stmt->execute();
+            $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            return $dataRow;
+        } 
+      
         // DELETE
         function deleteArea(){
             $sqlQuery = "DELETE FROM " . $this->db_table . " WHERE id = ?";
