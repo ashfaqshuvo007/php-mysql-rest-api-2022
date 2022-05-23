@@ -6,9 +6,10 @@ A simple api task for PARim Solutions using PHP 7+, MySQL 8
 ## :triangular_flag_on_post: Table of Contents
 
 - [Installation](#installation)
-- [Usage](#usage)
-- [Testing](#testing)
-- [Note](#note)
+- [Folder Structure](#folder)
+- [API routes](#api)
+- [Improvements](#improvements)
+- [Comments](#comments)
 - [Author](#author)
 - [License](#license)
 
@@ -115,6 +116,8 @@ php -S 127.0.0.1:8000
 This will run server on **http://127.0.0.1:8000**
 ## Folder Structure
 
+- The **api** folder is the entry point of the application and handles all the requests to our system.
+
 ```
 📦api
  ┣ 📜create.php
@@ -122,63 +125,101 @@ This will run server on **http://127.0.0.1:8000**
  ┣ 📜PostHeader.php
  ┗ 📜read.php
 ```
+```create.php```,```delete.php```,```read.php``` files are self-explanatory i.e. they handle create, read and delete request to the api sytem. ```PostHeader.php``` is just a utility file which we use in the post and read file.
+
+- The **class** folder has our models and also hides the complex queries we perform for processing the requests sent to our api system.
 
 
+```
+📦class
+ ┣ 📜area.php
+ ┣ 📜department.php
+ ┣ 📜event.php
+ ┣ 📜location.php
+ ┣ 📜shift.php
+ ┗ 📜user.php
+```
+You can look inside these folders to see what goes behind the scenes while we process requests.
 
-### For Person package
+- The **config** folder contains configurations helping our api system like the ```database.php``` mostly making our code more readable.
 
-You can look at [Person Folder](src/main/java/com/moderan/hometask/person/)
+```
+📦config
+ ┗ 📜database.php
 
+```
+
+- The **utils** folder is the one where the crawlers are :smiley: .
+
+```
+📦utils
+ ┣ 📜FileStreamReader.php
+ ┣ 📜HandleCreate.php
+ ┗ 📜HandleFetch.php
+
+```
+- ```FileStreamReader.php``` : 
+  Although I implemented a naive solution to the large data problem. This is my implementation to take on the large json file.
+
+- ```HandleCreate.php```
+  This handlecreate class has the naive implementation to tackle large json data. Read the input in batches and store them in database.
+
+- ```HandleFetch.php```
+  This file handles retrieval of records based on location and time range. ISO 8601 dates are hard to pass as URL parameter as the ```+``` before the timezone part of dates is replaced with space . So created a POST endpoint taking dates in body.
 
 ## API routes 
 I have used thunder client of Vscode but you use your browser or POSTMAN to test the endpoints.
 
 
-**Authentication**
+**Create Shifts**
 
-For authentication, we have used a Basic Auth (username & password): ```localhost:8888/auth``` return a user json object with details. You are authenticated.
+- The endpoint is ```/api/create.php``` **POST**
 
-- Auth route setup
+Request 
 
-![Auth Setup](/DemoImages/authRoute.PNG)
+![Create Request](/DemoImages/createRequest.PNG)
 
-- Response
+Response
 
-![Response](DemoImages/authResponse.PNG) 
-
-
-**We have two main routes**:
-
-1. To save a Person ```"/person"``` **POST METHOD** permitted only to users with role **ADMIN**
-
-- POST url and input body. It takes a json in the following format
-
-![Route url and input](DemoImages/postRoute.PNG)
-
-- Response: returns a new created Person Object with timestamp and id.
-
-![response](DemoImages/postResponse.PNG)
+![Create Response](DemoImages/createResponse.PNG) 
 
 
-2. To retrieve list of records matching a search string a Person ```"/person?search=John"``` GET METHOD permitted to ALL
-Let's say we want to retrieve all rows of data with 'John' in any column. We put a query parameter 'search' and its value as 'John'
+**Clear DB**:
 
-- GET url and input body. It takes a json in the following format
+- Endpoint ```"/api/delete.php"``` **GET** 
 
-![Search url and input](DemoImages/searchRoute.PNG)
+Request & Response
 
-- Response: returns a json list of all the records with 'John' 
+![Delete Request](DemoImages/deleteRequestResponse.PNG)
 
-![Response](DemoImages/searchResponse.PNG)
 
-## Testing 
 
-I implemented a simple test which you can find [here](src/test/java/com/moderan/hometask/HometaskApplicationTests.java)
+**Retrieve Shifts by Location and date range**:
 
-## Improvements:
-- I would have loved to have more tests(Unit and integration test with Mockito)
+- Endpoint ```"/api/read.php"``` **POST** 
+
+Request 
+
+![Read Request](DemoImages/readRequest.PNG)
+
+Response
+
+![Read Response](DemoImages/readResponse.PNG)
+
+## Improvements :
+
+- I would have loved to have tests(Unit and integration test with Mockito)
 - Error Handling can be much better with custom Error handlers 
-- Implementing CORS for the endpoints
+- Implementing CORS and might be authentication for the endpoints
+- Usage of a any lightweight framework might improve performance with caching.
+
+## Comments :
+
+- Tried to write some clean code but I don't know how much I succeeded :sweat_smile:
+- The task description could have a bit clearer :bulb:
+- The task was really interesting to do with php after a long time. Mostly use frameworks these days. So had to push through the manual DB creation, SQL writing. Coming from laravel migrations, this was really a good fallback to the old ways.
+
+- And lastly, dealing with ISO 8601 date fomating was really painful but I learnt a new thing doing this task.
 
 ## Author
 
