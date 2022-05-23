@@ -39,6 +39,25 @@
             }
             return false;
         }
+
+        // READ single
+        public function getSingleUser($id){
+            $sqlQuery = "SELECT
+                        name, 
+                        email,
+                        created 
+                      FROM
+                        ". $this->db_table ."
+                    WHERE 
+                       id = ?
+                    LIMIT 0,1";
+            $stmt = $this->conn->prepare($sqlQuery);
+            $stmt->bindParam(1, $id);
+            $stmt->execute();
+            $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            return $dataRow;
+        } 
         
         // READ single
         public function getSingleUserByEmail($email){
@@ -61,15 +80,10 @@
         } 
 
 
-        // DELETE
-        function deleteUser(){
-            $sqlQuery = "DELETE FROM " . $this->db_table . " WHERE id = ?";
+        // Empty data
+        function emptyTable(){
+            $sqlQuery = "TRUNCATE " . $this->db_table."; ALTER TABLE ". $this->db_table ." AUTO_INCREMENT = 1";
             $stmt = $this->conn->prepare($sqlQuery);
-        
-            $this->id=htmlspecialchars(strip_tags($this->id));
-        
-            $stmt->bindParam(1, $this->id);
-        
             if($stmt->execute()){
                 return true;
             }

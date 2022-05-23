@@ -85,15 +85,10 @@
             return $dataRow;
         }  
         
-        // DELETE
-        function deleteEvent(){
-            $sqlQuery = "DELETE FROM " . $this->db_table . " WHERE id = ?";
+         // Empty data
+         function emptyTable(){
+            $sqlQuery = "TRUNCATE " . $this->db_table."; ALTER TABLE ". $this->db_table ." AUTO_INCREMENT = 1";
             $stmt = $this->conn->prepare($sqlQuery);
-        
-            $this->id=htmlspecialchars(strip_tags($this->id));
-        
-            $stmt->bindParam(1, $this->id);
-        
             if($stmt->execute()){
                 return true;
             }

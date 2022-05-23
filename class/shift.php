@@ -24,11 +24,26 @@ class Shift{
     }
 
     // GET ALL
-    public function getShifts(){
-        $sqlQuery = "SELECT * FROM " . $this->db_table . "";
+    public function getShiftsByLocationBetweenTimes($location_id,$from,$to){
+        
+        $sqlQuery = "SELECT * FROM shifts 
+                    WHERE 
+                        location_id= ? 
+                    AND start >= ? 
+                    AND end <= ?";
+
         $stmt = $this->conn->prepare($sqlQuery);
+        $stmt->bindParam(1, $location_id);
+        $stmt->bindParam(2, $from);
+        $stmt->bindParam(3, $to);
+
+        //Can be used for pagination and deal with huge dataset
+        // $stmt->bindParam(4, $page);
+        // $stmt->bindParam(5, $limit);
+        
         $stmt->execute();
-        return $stmt;
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
     }
 
     //store 
@@ -69,7 +84,15 @@ class Shift{
     }
 
 
-
+     // Empty data
+     function emptyTable(){
+        $sqlQuery = "TRUNCATE " . $this->db_table."; ALTER TABLE ". $this->db_table ." AUTO_INCREMENT = 1";
+        $stmt = $this->conn->prepare($sqlQuery);
+        if($stmt->execute()){
+            return true;
+        }
+        return false;
+    }
 
 
 

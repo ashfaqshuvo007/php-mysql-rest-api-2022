@@ -35,7 +35,7 @@
                 $handleCreate = new HandleCreate($user,$location,$shift,$department,$area,$event,$row);
                 $success = $handleCreate->handleChunk();
             }
-            //Emoty the Chunk
+            //Empty the Chunk
             $chunk = [];
         }
 
