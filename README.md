@@ -190,7 +190,7 @@ Response
 
 Request & Response
 
-![Delete Request](DemoImages/deleteRequestResponse.PNG)
+![Delete Request](DemoImages/deleteRequstResponse.PNG)
 
 
 
